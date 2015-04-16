@@ -6,24 +6,22 @@ var Chatroom = React.createClass({
   _connect: function() {
     this.ic_connect('test');
   },
-
-      // <video src={this.icecomm.remote} autoPlay></video>
   render: function() {
     var localVideo;
     var remoteVideos;
-    console.log('render');
     if (this.state.icecomm.local) {
-      localVideo = (<video src={this.state.icecomm.local.stream} autoPlay></video>);
+      localVideo = (<video src={this.state.icecomm.local.stream} autoPlay muted></video>);
     }
     if (this.state.icecomm.peers) {
       remoteVideos = [];
       for (var i = 0; i < this.state.icecomm.peers.length; i++) {
         remoteVideos.push(
-          <video src={this.state.icecomm.peers[i].stream} autoPlay></video>
+          <video src={this.state.icecomm.peers[i].stream} autoPlay muted></video>
           )
       }
     }
-
+    console.log(this.state.icecomm.peers);
+    console.log(remoteVideos);
     return (
       <div>
       <div>Hi</div>

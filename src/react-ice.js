@@ -1,6 +1,4 @@
-var EventEmitter = require('events').EventEmitter;
 var comm;
-
 
 var ReactIceMixin = {
   componentWillMount: function() {
@@ -12,13 +10,17 @@ var ReactIceMixin = {
   ic_initiate: function(apiKey) {
     comm = new Icecomm(apiKey);
     var _this = this;
+
     comm.on('local', function(options) {
-      console.log('on local called');
-      console.log(_this.updateIcecommState);
       _this.updateIcecommState('local', options);
     });
     comm.on('connected', function(peer) {
-      _this.updateIcecommState('peers', peer);
+      _this.updateIcecommState('connected', peer);
+    });
+
+    comm.on('disconnect', function(peer) {
+      console.log('disconnected');
+      _this.updateIcecommState('disconnect', peer);
     });
 
   },
@@ -26,23 +28,36 @@ var ReactIceMixin = {
     comm.connect(room);
   },
   updateIcecommState: function(event, value) {
-    var icecommState = this.state || this.state.icecomm || {};
+    var icecommState = {};
+    if (this.state && this.state.icecomm) {
+      icecommState = this.state.icecomm;
+    }
     var state = this.state;
 
-    if (event === 'peers') {
-      icecommState[event] = icecommState[event] || [];
-      icecommState[event].push(value);
+    if (event === 'connected') {
+      icecommState.peers = icecommState.peers || [];
+      icecommState.peers.push(value);
     }
     if (event === 'local') {
-      icecommState[event] = value;
+      icecommState.local = value;
+    }
+    if (event === 'disconnect') {
+      var peerIndex = icecommState.peers.indexOf(value);
+      icecommState.peers.splice(peerIndex, 1);
     }
 
-    state.icecomm = icecommState;
+    this.state.icecomm = icecommState;
 
     this.setState(state);
   },
+  updateInitialState: function() {
+    var state = this.state || {};
+    state.icecomm = {};
+
+    return state;
+  },
   getInitialState: function() {
-    return this.updateIcecommState();
+    return this.updateInitialState();
   }
 
 };
