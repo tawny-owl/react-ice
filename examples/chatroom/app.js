@@ -10,11 +10,11 @@ var Chatroom = React.createClass({
     var localVideo;
     var remoteVideos = [];
     if (this.state.icecomm.local) {
-      localVideo = this.state.icecomm.local.getVideo();
+      localVideo = this.state.icecomm.local.getJSXVideo();
     }
     if (this.state.icecomm.peers) {
       for (var i = 0; i < this.state.icecomm.peers.length; i++) {
-        remoteVideos.push(this.state.icecomm.peers[i].getVideo());
+        remoteVideos.push(this.state.icecomm.peers[i].getJSXVideo());
       }
     }
     return (

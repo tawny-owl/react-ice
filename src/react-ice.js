@@ -46,11 +46,11 @@ function updateInitialState() {
 function updateIcecommState(icecommState, event, value) {
   if (event === 'connected') {
     icecommState.peers = icecommState.peers || [];
-    value = addGetVideo(value);
+    value = addGetJSXVideo(value);
     icecommState.peers.push(value);
   }
   if (event === 'local') {
-    value = addGetVideo(value);
+    value = addGetJSXVideo(value);
     icecommState.local = value;
   }
   if (event === 'disconnect' && icecommState.peers) {
@@ -61,8 +61,8 @@ function updateIcecommState(icecommState, event, value) {
   return icecommState;
 }
 
-function addGetVideo(peer) {
-  peer.getVideo = function() {
+function addGetJSXVideo(peer) {
+  peer.getJSXVideo = function() {
     return (<video src={peer.stream} autoPlay muted></video>);
   }
   return peer;
